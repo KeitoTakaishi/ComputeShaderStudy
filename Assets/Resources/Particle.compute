@@ -1,0 +1,32 @@
+﻿#pragma kernel Update
+//-----------------------------
+#define THREAD_SIZE_X 1024
+
+//構造体バッファ------------------------------
+struct Particle{ 
+   float3 pos;
+   float3 vel;
+};
+
+StructuredBuffer <Particle> _ParticleBufferRead;
+RWStructuredBuffer <Particle> _ParticleBufferWrite;
+
+//------------------------------
+//定数バッファ
+cbuffer CB{
+    int _NumParticles;
+}
+
+[numthreads(THREAD_SIZE_X,1,1)]
+void Update (uint3 id : SV_DispatchThreadID)
+{
+	uint P_ID = id.x;
+	if(_ParticleBufferRead[P_ID].pos.y < -3.0){
+	    _ParticleBufferWrite[P_ID].pos.y = 2.0;
+	}else{
+	    _ParticleBufferWrite[P_ID].pos = _ParticleBufferRead[P_ID].pos - float3(0.0, 0.02, 0.0);
+	 }
+}
+
+
+
