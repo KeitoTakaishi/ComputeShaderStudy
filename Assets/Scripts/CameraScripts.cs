@@ -18,6 +18,5 @@ public class CameraScripts : MonoBehaviour
 		time += Time.deltaTime;
 		transform.LookAt(t.transform);
 		this.transform.position = new Vector3(-3.0f + rad*Mathf.Sin(70.0f*time*Mathf.Deg2Rad), rad*Mathf.Sin(50.0f*time*Mathf.Deg2Rad), -3.0f + rad*Mathf.Cos(50*time*Mathf.Deg2Rad));
-		//this.transform.Rotate(new Vector3(1.0f, 1.0f, 1.0f), Time.deltaTime*20.0f);
 	}
 }
