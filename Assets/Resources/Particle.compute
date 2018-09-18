@@ -10,22 +10,50 @@ struct Particle{
 
 StructuredBuffer <Particle> _ParticleBufferRead;
 RWStructuredBuffer <Particle> _ParticleBufferWrite;
+StructuredBuffer <float3>_NormalBufferRead;
+StructuredBuffer <float> _ParticleDis;
 
 //------------------------------
 //定数バッファ
 cbuffer CB{
     int _NumParticles;
+    float _Mass;
+    float _AttractMass;
+    float3 _AttPos;
 }
-
+//------------------------------
+float _Time;
 [numthreads(THREAD_SIZE_X,1,1)]
 void Update (uint3 id : SV_DispatchThreadID)
 {
 	uint P_ID = id.x;
-	if(_ParticleBufferRead[P_ID].pos.y < -3.0){
-	    _ParticleBufferWrite[P_ID].pos.y = 2.0;
-	}else{
-	    _ParticleBufferWrite[P_ID].pos = _ParticleBufferRead[P_ID].pos - float3(0.0, 0.02, 0.0);
-	 }
+	float3 vel = _ParticleBufferRead[P_ID].vel;
+    float3 pos = _ParticleBufferRead[P_ID].pos;
+    
+	float3 dir = _AttPos - pos;
+	//float len = distance(_AttPos, _ParticleBufferRead[P_ID].pos);
+	//float len = length(dir);
+	//len = len * len;
+	float l = abs(length(dir));
+	//l = l*l;
+	//l = pow(l,2.0);
+	float G = 0.01;
+	dir = G * dir/length(dir) * abs(10.0*sin(_Time));
+	float3 force = dir;
+    
+    
+    vel += force;
+    pos += vel;
+    
+    _ParticleBufferWrite[P_ID].vel = vel;
+    _ParticleBufferWrite[P_ID].pos = pos;
+    
+	//_ParticleBufferWrite[P_ID].pos += acc*.003;
+	//_ParticleBufferWrite[P_ID].pos
+	//_ParticleBufferWrite[P_ID].pos = 
+	//_ParticleBufferRead[P_ID].pos + 
+	//cos(_Time*150.0 + P_ID*100.0 + _ParticleBufferRead[P_ID].pos.x * 50.0 + _ParticleBufferRead[P_ID].pos.y*50.0
+	//+ _ParticleBufferRead[P_ID].pos.z * 50.0 )*_NormalBufferRead[P_ID]*0.5;
 }
 
 

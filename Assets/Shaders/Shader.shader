@@ -62,6 +62,7 @@ Shader "Custom/Particle" {
 	Properties {
 		_MainTex("Texture",         2D) = "black" {}
 		_ParticleRadius("Particle Radius", Float) = 0.05
+		[HDR]
 		_WaterColor("WaterColor", Color) = (1, 1, 1, 1)
 	}
 
@@ -121,7 +122,7 @@ Shader "Custom/Particle" {
         forward.y = 0;
         forward = normalize(forward);
         float3 right = cross(up, forward);
-        float texSize = 0.1;
+        float texSize = 0.01;
         float halfS = 0.5 * texSize;
         float4 v[4];
         v[0] = float4(IN[0].pos + halfS * right - halfS * up, 1.0);
@@ -184,7 +185,8 @@ Shader "Custom/Particle" {
 	// Fragment Shader
 	// --------------------------------------------------------------------
 	fixed4 frag(g2f input) : SV_Target {
-	    return float4(1.0,1.0,1.0,1.0) * tex2D(_MainTex, input.uv); 
+	    _WaterColor.r = 1.0 *sin(_Time.x*5.0) + 0.5 ;
+	    return _WaterColor * tex2D(_MainTex, input.uv); 
 		//return tex2D(_MainTex, input.tex)*float4(0.0, 0.0, 1.0, 0.0);
 	}
 
