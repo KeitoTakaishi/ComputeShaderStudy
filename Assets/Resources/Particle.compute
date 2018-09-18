@@ -35,8 +35,7 @@ void Update (uint3 id : SV_DispatchThreadID)
 	//float len = length(dir);
 	//len = len * len;
 	float l = abs(length(dir));
-	//l = l*l;
-	//l = pow(l,2.0);
+	
 	float G = 0.01;
 	dir = G * dir/length(dir) * abs(10.0*sin(_Time));
 	float3 force = dir;
